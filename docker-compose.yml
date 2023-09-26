@@ -1,0 +1,75 @@
+version: '3.8'
+
+volumes:
+  mongodb_data_container: null
+  vscode:
+
+    null
+networks:
+  docker_network:
+
+    null
+x-common-variables: &common-variables USER_SERVICE_PORT=$USER_SERVICE_PORT
+  USER_SERVICE_HOST=$USER_SERVICE_HOST LOGGER_SERVICE_PORT=$LOGGER_SERVICE_PORT
+  BASE_URI=$BASE_URI DATABASE_NAME=$DATABASE_NAME
+  TOKEN_EXPIRE_IN=$TOKEN_EXPIRE_IN JWT_SECRET=$JWT_SECRET
+  MONGO_PORT=$MONGO_PORT DATABASE_NAME=$DATABASE_NAME
+  DATABASE_USER=$DATABASE_USER DATABASE_PASSWORD=$DATABASE_PASSWORD
+  MONGO_INITDB_ROOT_USERNAME=$MONGO_INITDB_ROOT_USERNAME
+  MONGO_INITDB_ROOT_PASSWORD=$MONGO_INITDB_ROOT_PASSWORD
+
+services:
+  mongo:
+    image: mongo:latest
+    restart: always
+    container_name: "mongo"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: $MONGO_INITDB_ROOT_USERNAME
+      MONGO_INITDB_ROOT_PASSWORD: $MONGO_INITDB_ROOT_PASSWORD
+      MONGO_INITDB_DATABASE: $DATABASE_NAME
+      DATABASE_NAME: $DATABASE_NAME
+      DATABASE_USER: $DATABASE_USER
+      DATABASE_PASSWORD: $DATABASE_PASSWORD
+    ports:
+      - 27018:27017
+    volumes:
+      - mongodb_data_container:/data/db
+      - ./mongo-init.sh:/docker-entrypoint-initdb.d/mongo-init.sh
+    networks:
+      - docker_network
+
+  gateway:
+    # image: 
+    container_name: "core"
+    restart: always
+    links:
+      - mongo:mongo
+      - logger
+      - user
+      - clickup
+    depends_on:
+      - mongo
+      - logger
+      - user
+      - clickup
+    # environment: *common-variables
+    env_file: .env
+    networks:
+      - docker_network
+    ports:
+      - 0.0.0.0:${PORT}:${PORT}
+
+  user:
+    # image: 
+    container_name: "userservice"
+    entrypoint: [ "sh", "./entrypoint.sh", "seed" ]
+    restart: always
+    # environment: *common-variables
+    env_file: .env
+    ports:
+      - 0.0.0.0:${USER_SERVICE_PORT}:${USER_SERVICE_PORT}
+    links:
+      - mongo
+      - logger
+    networks:
+      - docker_network

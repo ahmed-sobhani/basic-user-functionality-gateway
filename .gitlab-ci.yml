@@ -1,0 +1,45 @@
+image: docker:stable
+
+stages:
+  - build
+  - deploy
+
+services:
+  - docker:dind
+
+variables:
+  DOCKER_HOST: tcp://docker:2375
+  APP_TAG: $CI_REGISTRY_IMAGE/app:$CI_COMMIT_SHA
+  APP_LAST: $CI_REGISTRY_IMAGE/app:latest
+
+
+
+build:
+  stage: build
+  before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  script:
+    - docker pull $APP_LAST || true
+    - docker build --pull --cache-from $APP_LAST --tag $APP_TAG --tag $APP_LAST -f Dockerfile .
+    - docker push $APP_TAG
+    - docker push $APP_LAST
+    - echo $CI_COMMIT_SHA
+  only:
+    - main
+    - staging
+
+
+deploy:
+  image: alpine:latest
+  stage: deploy
+  tags:
+    - deployment
+  script:
+    - chmod og= $ID_RSA
+    - apk update && apk add openssh-client
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY"
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "ls -l"
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "./updater.sh"
+
+  only:
+    - main
