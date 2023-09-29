@@ -1,77 +1,77 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
-</p>
+# User Management API GateWay
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+This project is a user microservice built using NestJS, MongoDB, and provides CRUD operations for user management and various authentication methods.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
-## Description
+## Getting Started
+### Prerequisites
+Before you begin, ensure you have the following prerequisites installed:
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
-
-## Installation
+- Node.js and npm
+- MongoDB
+- Docker and Docker Compose
+- GitLab CI/CD Runner (for GitLab CI/CD)
+### Installation
+Clone the repository, Then cd the project directory
+### Install dependencies:
 
 ```bash
-$ npm install
+npm install
 ```
+Configure your environment variables. Create a .env file and set the required variables. You can use .env.example as a template.
 
-## Running the app
+### Start the application:
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+npm run start:dev
 ```
+### Configuration
+Adjust the environment variables in the .env file to match your configuration needs.
+Configure MongoDB, Google, LinkedIn, OTP authentication strategies, and any other settings in the application as needed.
+### Usage
+You can now use the API endpoints to manage users.
 
-## Test
+### Authentication
+#### Google Authentication
+To enable Google Authentication:
+
+Create a Google Developer Console project and configure OAuth credentials.
+Set the GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET environment variables.
+LinkedIn Authentication
+#### To enable LinkedIn Authentication:
+
+Create a LinkedIn Developer application and configure OAuth credentials.
+Set the LINKEDIN_CLIENT_ID and LINKEDIN_CLIENT_SECRET environment variables.
+#### OTP Authentication
+OTP (One-Time Password) authentication is enabled by default using the specified secret and issuer in the .env file.
+
+### Build the Docker image:
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+docker build -t user-microservice .
 ```
 
-## Support
+### Start the application and services using Docker Compose:
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```bash
+docker-compose up -d
+```
 
-## Stay in touch
+### Documentation
+Generate API documentation using Compodoc:
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+```bash
+npm run compodoc
+```
+View documentation by opening documentation/index.html in a web browser.
+
+## Future Integrations
+This project is prepared for future integrations with AWS Cognito, Kafka, and AWS Lambda Serverless. Follow the documentation of these services to integrate them into the microservice as needed.
+
+## Contributing
+Contributions are welcome! Please follow the Contributing Guidelines.
 
 ## License
+This project is licensed under the MIT License. See the LICENSE file for details.
 
-Nest is [MIT licensed](LICENSE).
-
-## Endpoints Documents
-
-<a href="https://www.getpostman.com/collections/8690fc48cf783b470ef9">Postman</a>
+Feel free to customize this README and the code to fit your specific project requirements. This template provides a starting point for building a user microservice with CRUD operations, authentication, NestJS, MongoDB, Docker, Docker Compose, GitLab CI/CD, and preparation for future integrations with AWS Cognito, Kafka, and AWS Lambda Serverless.
