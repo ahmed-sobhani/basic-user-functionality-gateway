@@ -1,0 +1,2 @@
+export const MESSAGE_BUS = 'MESSAGE_BUS';
+export const MESSAGE_CLIENT = 'MESSAGE_CLIENT';

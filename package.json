@@ -34,6 +34,7 @@
     "class-transformer": "^0.4.0",
     "class-validator": "^0.13.1",
     "dotenv": "^10.0.0",
+    "kafkajs": "^2.2.4",
     "mongoose": "^6.0.5",
     "nestjs-agenda": "^2.0.0",
     "passport": "^0.4.1",
