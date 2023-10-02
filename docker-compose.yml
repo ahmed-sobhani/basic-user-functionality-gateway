@@ -38,20 +38,53 @@ services:
     networks:
       - docker_network
 
+  zookeeper:
+    image: wurstmeister/zookeeper
+    container_name: docker-zookeeper
+    restart: unless-stopped
+    networks:
+      - docker_network
+    ports:
+      - 2181:2181
+
+  kafka:
+    image: wurstmeister/kafka
+    container_name: docker-kafka
+    restart: unless-stopped
+    networks:
+      - docker_network
+    ports:
+      - 9092:9092
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: docker-kafka
+      KAFKA_ZOOKEEPER_CONNECT: docker-zookeeper:2181
+
+  redis:
+    image: redis:latest
+    container_name: docker-redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    ports:
+      - 6379:6379
+    volumes:
+      - /root/redis-data/production:/data
+    networks:
+      - docker_network
+
   gateway:
-    # image: 
+    build:
+      context: . 
     container_name: "core"
     restart: always
     links:
       - mongo:mongo
-      - logger
       - user
-      - clickup
     depends_on:
       - mongo
-      - logger
+      - kafka
+      - zookeeper
+      - redis
       - user
-      - clickup
     # environment: *common-variables
     env_file: .env
     networks:
@@ -60,7 +93,8 @@ services:
       - 0.0.0.0:${PORT}:${PORT}
 
   user:
-    # image: 
+    build:
+      context: ../user-service 
     container_name: "userservice"
     entrypoint: [ "sh", "./entrypoint.sh", "seed" ]
     restart: always
@@ -70,6 +104,10 @@ services:
       - 0.0.0.0:${USER_SERVICE_PORT}:${USER_SERVICE_PORT}
     links:
       - mongo
-      - logger
     networks:
       - docker_network
+    depends_on:
+      - mongo
+      - kafka
+      - zookeeper
+      - redis
